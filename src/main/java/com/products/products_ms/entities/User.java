@@ -1,15 +1,18 @@
 package com.products.products_ms.entities;
 
+import com.products.products_ms.entities.enums.UserRole;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "user_tb")
-public class User implements Serializable {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +22,10 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String password;
+    private UserRole role;
 
     @OneToMany(mappedBy = "client")
-    private List<Order> orders = new ArrayList<>();
+    final List<Order> orders = new ArrayList<>();
 
     public User(){
 
@@ -39,6 +43,7 @@ public class User implements Serializable {
     public List<Order> getOrders() {
         return orders;
     }
+
     public Long getId() {
         return id;
     }
@@ -75,8 +80,38 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return getCpf();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
