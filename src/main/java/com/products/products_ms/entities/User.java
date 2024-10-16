@@ -1,5 +1,6 @@
 package com.products.products_ms.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.products.products_ms.entities.enums.UserRole;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +25,7 @@ public class User implements UserDetails {
     private String password;
     private UserRole role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "client")
     final List<Order> orders = new ArrayList<>();
 
